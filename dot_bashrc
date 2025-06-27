@@ -24,11 +24,73 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 #source ~/.profile
-### bling.sh source start
-# test -f /usr/share/ublue-os/bluefin-cli/bling.sh && source /usr/share/ublue-os/bluefin-cli/bling.sh
-### bling.sh source end
 export EDITOR=nvim
 export PATH=$PATH:$GOPATH/bin
 
 # opencode
 export PATH=/var/home/manepal/.opencode/bin:$PATH
+
+. "$HOME/.atuin/bin/env"
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+eval "$(atuin init bash)"
+
+# ============================================================================
+# MODERN CLI TOOL REPLACEMENTS
+# ============================================================================
+
+# Better ls with eza
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza --color=always --group-directories-first'
+    alias ll='eza -la --color=always --group-directories-first --icons'
+    alias la='eza -a --color=always --group-directories-first --icons'
+    alias lt='eza -aT --color=always --group-directories-first --icons'
+    alias l.='eza -a | grep -E "^\."'
+fi
+
+# Better cat with bat
+if command -v bat >/dev/null 2>&1; then
+    alias cat='bat --paging=never'
+    alias catp='bat'
+    export BAT_THEME="Catppuccin-mocha"
+fi
+
+# Initialize zoxide (smart cd)
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init bash)"
+    alias cd='z'
+fi
+
+# ============================================================================
+# PRODUCTIVITY ALIASES
+# ============================================================================
+
+# File operations
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias mkdir='mkdir -pv'
+
+# Navigation shortcuts
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ~='cd ~'
+alias -- -='cd -'
+
+# System information
+alias df='df -h'
+alias du='du -h'
+alias free='free -h'
+alias ps='ps auxf'
+
+# Network
+alias ping='ping -c 5'
+alias ports='netstat -tulanp'
+
+# Development shortcuts
+alias vim='nvim'
+alias vi='nvim'
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'

@@ -1,0 +1,18 @@
+# TMux plugins (managed by TPM - should not be committed)
+dot_config/tmux/plugins/
+
+**/*.pem
+**/*.p12
+**/*.pfx
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
