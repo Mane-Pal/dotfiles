@@ -128,11 +128,11 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
-source ~/.myownrc
 
-eval $(ssh-agent)
+# Smart SSH agent - only start if not running
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    eval $(ssh-agent)
+fi
 
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# Enable atuin shell integration
+eval "$(atuin init zsh)"
