@@ -1,0 +1,41 @@
+#!/bin/bash
+# Set theme using chezmoi templates
+
+set -e
+
+THEMES_DIR="$HOME/.local/share/chezmoi/themes/"
+CHEZMOI_DATA="$HOME/.local/share/chezmoi/.chezmoidata.toml"
+
+# Available themes
+AVAILABLE_THEMES=($(find "$THEMES_DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort))
+
+if [[ $# -eq 0 ]]; then
+    echo "Available themes:"
+    for theme in "${AVAILABLE_THEMES[@]}"; do
+        echo "  - $theme"
+    done
+    echo ""
+    echo "Usage: $0 <theme_name>"
+    exit 1
+fi
+
+THEME_NAME="$1"
+
+# Validate theme exists
+if [[ ! -d "$THEMES_DIR/$THEME_NAME" ]]; then
+    echo "Error: Theme '$THEME_NAME' not found"
+    echo "Available themes: ${AVAILABLE_THEMES[*]}"
+    exit 1
+fi
+
+echo "Setting theme to: $THEME_NAME"
+
+# Update chezmoi data with new theme
+sed -i "s/current = \"[^\"]*\"/current = \"$THEME_NAME\"/" "$CHEZMOI_DATA"
+
+# Apply chezmoi templates
+cd "$HOME/.local/share/chezmoi"
+chezmoi apply
+
+echo "✅ Theme '$THEME_NAME' applied successfully!"
+echo "💡 Reload your terminal and Hyprland to see all changes"

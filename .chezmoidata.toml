@@ -1,0 +1,38 @@
+[themes]
+current = "catppuccin"
+
+[themes.catppuccin]
+name = "Catppuccin"
+wezterm_scheme = "Catppuccin Mocha"
+background_color = "#1e1e2e"
+foreground_color = "#cdd6f4"
+
+[themes.everforest]
+name = "Everforest"
+wezterm_scheme = "Everforest Dark (Gogh)"
+background_color = "#2d353b"
+foreground_color = "#d3c6aa"
+
+[themes.gruvbox]
+name = "Gruvbox"
+wezterm_scheme = "Gruvbox Material (Gogh)"
+background_color = "#282828"
+foreground_color = "#ebdbb2"
+
+[themes.kanagawa]
+name = "Kanagawa"
+wezterm_scheme = "Kanagawa (Gogh)"
+background_color = "#1f1f28"
+foreground_color = "#dcd7ba"
+
+[themes.nord]
+name = "Nord"
+wezterm_scheme = "Nord (Gogh)"
+background_color = "#2e3440"
+foreground_color = "#d8dee9"
+
+[themes.tokyo-night]
+name = "Tokyo Night"
+wezterm_scheme = "Tokyo Night"
+background_color = "#1a1b26"
+foreground_color = "#c0caf5"

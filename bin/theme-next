@@ -1,0 +1,73 @@
+#!/bin/bash
+
+THEMES_DIR="$HOME/.local/share/chezmoi/themes/"
+CURRENT_THEME_LINK="$HOME/.config/current/theme"
+BACKGROUNDS_DIR="$HOME/.config/backgrounds/"
+
+THEMES=($(find "$THEMES_DIR" -mindepth 1 -type d | sort))
+TOTAL=${#THEMES[@]}
+
+# Create current directory if it doesn't exist
+mkdir -p "$HOME/.config/current"
+mkdir -p "$BACKGROUNDS_DIR"
+
+# Get current theme from symlink
+if [[ -L "$CURRENT_THEME_LINK" ]]; then
+  CURRENT_THEME=$(readlink "$CURRENT_THEME_LINK")
+else
+  # Default to first theme if no symlink exists
+  CURRENT_THEME=${THEMES[0]}
+fi
+
+# Find current theme index
+INDEX=0
+for i in "${!THEMES[@]}"; do
+  if [[ "${THEMES[$i]}" == "$CURRENT_THEME" ]]; then
+    INDEX=$i
+    break
+  fi
+done
+
+# Get next theme (wrap around)
+NEXT_INDEX=$(((INDEX + 1) % TOTAL))
+NEW_THEME=${THEMES[$NEXT_INDEX]}
+NEW_THEME_NAME=$(basename "$NEW_THEME")
+
+# Set current theme
+ln -nsf "$NEW_THEME" "$CURRENT_THEME_LINK"
+
+# Apply theme configs
+cp "$NEW_THEME/waybar.css" "$HOME/.config/waybar/style.css" 2>/dev/null || true
+cp "$NEW_THEME/wofi.css" "$HOME/.config/wofi/style.css" 2>/dev/null || true
+cp "$NEW_THEME/btop.theme" "$HOME/.config/btop/themes/$NEW_THEME_NAME.theme" 2>/dev/null || true
+cp "$NEW_THEME/mako.ini" "$HOME/.config/mako/config" 2>/dev/null || true
+
+# Apply wezterm theme if available
+if [[ -f "$NEW_THEME/wezterm.lua" ]]; then
+    # Create a backup of current config
+    cp "$HOME/.config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua.bak" 2>/dev/null || true
+    
+    # Update color scheme in wezterm config
+    THEME_CONFIG=$(cat "$NEW_THEME/wezterm.lua")
+    COLOR_SCHEME=$(echo "$THEME_CONFIG" | grep -o 'color_scheme = "[^"]*"' | cut -d'"' -f2)
+    
+    if [[ -n "$COLOR_SCHEME" ]]; then
+        sed -i "s/color_scheme = \"[^\"]*\"/color_scheme = \"$COLOR_SCHEME\"/" "$HOME/.config/wezterm/wezterm.lua"
+    fi
+fi
+
+# Touch wezterm config to pickup changes
+touch "$HOME/.config/wezterm/wezterm.lua"
+
+# Restart for new theme
+pkill -SIGUSR2 waybar 2>/dev/null || true
+makoctl reload 2>/dev/null || true
+hyprctl reload 2>/dev/null || true
+
+# Set new background if available
+if [[ -f "$NEW_THEME/backgrounds.sh" ]]; then
+  source "$NEW_THEME/backgrounds.sh"
+fi
+
+# Notify of the new theme
+notify-send "Theme changed to $NEW_THEME_NAME" -t 2000 2>/dev/null || echo "Theme changed to $NEW_THEME_NAME"
