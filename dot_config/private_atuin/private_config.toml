@@ -23,10 +23,10 @@
 # timezone = "local"
 
 ## enable or disable automatic sync
-# auto_sync = true
+auto_sync = false
 
 ## enable or disable automatic update checks
-# update_check = true
+update_check = false
 
 ## address of the sync server
 # sync_address = "https://api.atuin.sh"
@@ -60,18 +60,18 @@
 
 ## which style to use
 ## possible values: auto, full, compact
-# style = "auto"
+style = "compact"
 
 ## the maximum number of lines the interface should take up
 ## set it to 0 to always go full screen
-# inline_height = 0
+inline_height = 5
 
 ## Invert the UI - put the search bar at the top , Default to `false`
-# invert = false
+invert = false
 
 ## enable or disable showing a preview of the selected command
 ## useful when the command is longer than the terminal width and is cut off
-# show_preview = true
+show_preview = false
 
 ## what to do when the escape key is pressed when searching
 ## possible values: return-original, return-query
@@ -120,10 +120,10 @@
 ## Configure whether or not to show the help row, which includes the current Atuin
 ## version (and whether an update is available), a keymap hint, and the total
 ## amount of commands in your history.
-# show_help = true
+show_help = false
 
 ## Configure whether or not to show tabs for search and inspect
-# show_tabs = true
+show_tabs = false
 
 ## Defaults to true. This matches history against a set of default regex, and will not save it if we get a match. Defaults include
 ## 1. AWS key id

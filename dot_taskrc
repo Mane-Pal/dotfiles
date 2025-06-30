@@ -1,0 +1,62 @@
+# [Created by task 3.4.1 6/27/2025 14:20:56]
+data.location=/var/home/manepal/.task
+news.version=3.4.1
+
+# To use the default location of the XDG directories,
+# move this configuration file from ~/.taskrc to ~/.config/task/taskrc and update location config as follows:
+
+#data.location=~/.local/share/task
+#hooks.location=~/.config/task/hooks
+
+# Color theme (uncomment one to use)
+#include light-16.theme
+#include light-256.theme
+#include bubblegum-256.theme
+#include dark-16.theme
+#include dark-256.theme
+#include dark-red-256.theme
+#include dark-green-256.theme
+#include dark-blue-256.theme
+#include dark-violets-256.theme
+#include dark-yellow-green.theme
+#include dark-gray-256.theme
+#include dark-gray-blue-256.theme
+#include solarized-dark-256.theme
+#include solarized-light-256.theme
+#include dark-256.theme
+
+# ============================================================================
+# CUSTOM CONFIGURATION FOR TERMINAL WORKFLOW
+# ============================================================================
+
+# Contexts for different work areas
+context.work=+work
+context.personal=+personal
+context.experiments=+experiments
+context.learning=+learning
+
+# Quick aliases
+alias.active=status:pending limit:10
+alias.today=+TODAY or due:today
+alias.urgent=urgency.over:10.0
+alias.inbox=+inbox
+alias.next=status:pending -inbox -someday limit:5
+
+# UDA (User Defined Attributes) for note linking
+uda.note.type=string
+uda.note.label=Note
+uda.note.values=
+
+# Report customizations
+report.active.columns=id,start.age,entry.age,depends,priority,project,tag,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.active.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+
+# Default priority
+default.priority=M
+
+# Urgency configuration
+urgency.user.tag.inbox.coefficient=-1.0
+urgency.user.tag.someday.coefficient=-2.0
+urgency.user.tag.next.coefficient=1.0
+urgency.user.tag.work.coefficient=1.0
+
