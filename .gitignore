@@ -16,3 +16,8 @@ dot_config/tmux/plugins/
 *.tmp
 *.temp
 .cache/
+
+# Project management and session files
+TODO.md
+CLAUDE.md
+PROJECT_MANAGEMENT_PLAN.md
