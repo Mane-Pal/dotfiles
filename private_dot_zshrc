@@ -131,6 +131,10 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
+# Source development environment (language tools, auto-start configs)
+if [ -f "$HOME/.config/shell/dev-environment" ]; then
+    . "$HOME/.config/shell/dev-environment"
+fi
 
 # Smart SSH agent - only start if not running
 if ! pgrep -u "$USER" ssh-agent > /dev/null; then

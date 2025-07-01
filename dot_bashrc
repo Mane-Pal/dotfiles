@@ -23,9 +23,14 @@ if [ -d ~/.bashrc.d ]; then
   done
 fi
 unset rc
+
+# Source development environment (language tools, auto-start configs)
+if [ -f "$HOME/.config/shell/dev-environment" ]; then
+    . "$HOME/.config/shell/dev-environment"
+fi
+
 #source ~/.profile
 export EDITOR=nvim
-export PATH=$PATH:$GOPATH/bin
 
 # opencode
 export PATH=/var/home/manepal/.opencode/bin:$PATH
