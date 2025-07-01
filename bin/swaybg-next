@@ -2,8 +2,12 @@
 
 # Cycles through the background images available
 
-BACKGROUNDS_DIR="$HOME/.config/omarchy/current/backgrounds/"
-CURRENT_BACKGROUND_LINK="$HOME/.config/omarchy/current/background"
+BACKGROUNDS_DIR="$HOME/.config/current/backgrounds/"
+CURRENT_BACKGROUND_LINK="$HOME/.config/current/background"
+
+# Create directories if they don't exist
+mkdir -p "$BACKGROUNDS_DIR"
+mkdir -p "$(dirname "$CURRENT_BACKGROUND_LINK")"
 
 BACKGROUNDS=($(find "$BACKGROUNDS_DIR" -type f | sort))
 TOTAL=${#BACKGROUNDS[@]}

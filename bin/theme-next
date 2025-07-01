@@ -66,7 +66,40 @@ hyprctl reload 2>/dev/null || true
 
 # Set new background if available
 if [[ -f "$NEW_THEME/backgrounds.sh" ]]; then
+  export BACKGROUNDS_DIR
+  
+  # Function to download background images
+  download_background_image() {
+    local url="$1"
+    local filename="$2"
+    local filepath="$BACKGROUNDS_DIR/$filename"
+    
+    # Create directory if it doesn't exist
+    mkdir -p "$(dirname "$filepath")"
+    
+    # Download if file doesn't exist
+    if [[ ! -f "$filepath" ]]; then
+      echo "Downloading background: $filename"
+      curl -sSL "$url" -o "$filepath"
+    fi
+  }
+  
   source "$NEW_THEME/backgrounds.sh"
+  
+  # Set a random background from the theme directory
+  THEME_BG_DIR="$BACKGROUNDS_DIR/$NEW_THEME_NAME"
+  if [[ -d "$THEME_BG_DIR" ]]; then
+    BG_FILES=($(find "$THEME_BG_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | sort))
+    if [[ ${#BG_FILES[@]} -gt 0 ]]; then
+      # Pick first background or random one
+      NEW_BG="${BG_FILES[0]}"
+      ln -nsf "$NEW_BG" "$HOME/.config/current/background"
+      
+      # Set background with swaybg
+      pkill -x swaybg 2>/dev/null || true
+      setsid swaybg -i "$NEW_BG" -m fill >/dev/null 2>&1 &
+    fi
+  fi
 fi
 
 # Notify of the new theme
