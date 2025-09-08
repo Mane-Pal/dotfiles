@@ -1,0 +1,113 @@
+* {
+  color: #cdd6f4;
+  background-color: #181824;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+}
+
+window#waybar {
+  background-color: #181824;
+  border-bottom: 1px solid #45475a;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+  background-color: #181824;
+}
+
+/* Add spacing and padding to right modules */
+.modules-right > widget:not(:last-child) {
+  margin-right: 8px;
+}
+
+/* Style individual modules */
+#bluetooth,
+#network,
+#pulseaudio,
+#cpu,
+#power-profiles-daemon,
+#battery {
+  padding: 0 10px;
+  margin: 0 2px;
+  border-radius: 6px;
+  background-color: #313244;
+  color: #cdd6f4;
+}
+
+
+#bluetooth {
+  color: #89b4fa;
+}
+
+#network {
+  color: #a6e3a1;
+}
+
+#pulseaudio {
+  color: #f9e2af;
+}
+
+#cpu {
+  color: #fab387;
+}
+
+#power-profiles-daemon {
+  color: #cba6f7;
+}
+
+#battery {
+  color: #f38ba8;
+}
+
+#battery.warning {
+  color: #f9e2af;
+}
+
+#battery.critical {
+  color: #f38ba8;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  to {
+    background-color: #f38ba8;
+    color: #1e1e2e;
+  }
+}
+
+/* Clock styling */
+#clock {
+  padding: 0 15px;
+  font-weight: bold;
+  color: #cdd6f4;
+}
+
+/* Workspaces styling */
+#workspaces {
+  padding: 0 5px;
+  background-color: transparent;
+}
+
+#workspaces button {
+  padding: 2px 8px;
+  margin: 0 1px;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #6c7086;
+  border: none;
+  font-size: 12px;
+  min-width: 20px;
+}
+
+#workspaces button.active {
+  background-color: #89b4fa;
+  color: #1e1e2e;
+  font-weight: bold;
+}
+
+#workspaces button:hover {
+  background-color: #45475a;
+  color: #cdd6f4;
+}
+

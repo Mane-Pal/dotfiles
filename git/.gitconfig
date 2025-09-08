@@ -1,20 +1,5 @@
 [user]
-    name = 
-    email = 
-
+	name = Mads Nedergaard Paulsen
+	email = mads@mindway.ai
 [core]
-    editor = nvim
-    pager = delta
-
-[init]
-    defaultBranch = main
-
-[alias]
-    st = status
-    co = checkout
-    br = branch
-    ci = commit
-    lg = log --oneline --graph --decorate
-
-[pull]
-    rebase = false
+	excludesfile = /home/manepal/.gitignore_global

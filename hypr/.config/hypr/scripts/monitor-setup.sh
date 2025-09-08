@@ -1,0 +1,205 @@
+#!/bin/bash
+
+# Dynamic monitor setup script for Hyprland
+# Detects connected monitors and applies appropriate configuration
+# Also handles workspace bindings for multi-monitor setups
+
+# Get list of connected monitors
+MONITORS=$(hyprctl monitors -j | jq -r '.[].name')
+MONITOR_COUNT=$(echo "$MONITORS" | wc -l)
+
+# Laptop display (internal)
+LAPTOP_DISPLAY="eDP-1"
+
+# Workspace configuration
+# Main monitor gets workspaces 1-10, others get locked high-numbered workspaces
+MAIN_MONITOR_WS="1-10"
+SECONDARY_WS="11"
+TERTIARY_WS="12"
+
+# Function to set workspace bindings
+setup_workspace_bindings() {
+    local main_monitor="$1"
+    local secondary_monitor="$2"
+    local tertiary_monitor="$3"
+    
+    echo "Setting up workspace bindings..."
+    
+    # Create workspace rules and apply them
+    echo "Creating workspace rules..."
+    
+    # Create workspace rules for main monitor (1-10)
+    for ws in {1..10}; do
+        hyprctl keyword workspace "$ws,monitor:$main_monitor"
+        echo "Set workspace $ws to monitor $main_monitor"
+    done
+    
+    # Create workspace rules for secondary and tertiary monitors
+    if [[ -n "$secondary_monitor" ]]; then
+        hyprctl keyword workspace "$SECONDARY_WS,monitor:$secondary_monitor"
+        echo "Set workspace $SECONDARY_WS to monitor $secondary_monitor"
+    fi
+    
+    if [[ -n "$tertiary_monitor" ]]; then
+        hyprctl keyword workspace "$TERTIARY_WS,monitor:$tertiary_monitor"
+        echo "Set workspace $TERTIARY_WS to monitor $tertiary_monitor"
+    fi
+    
+    # Force move existing workspaces to correct monitors
+    echo "Moving existing workspaces to correct monitors..."
+    for ws in {1..10}; do
+        hyprctl dispatch moveworkspacetomonitor "$ws $main_monitor" 2>/dev/null || true
+    done
+    
+    if [[ -n "$secondary_monitor" ]]; then
+        hyprctl dispatch moveworkspacetomonitor "$SECONDARY_WS $secondary_monitor" 2>/dev/null || true
+    fi
+    
+    if [[ -n "$tertiary_monitor" ]]; then
+        hyprctl dispatch moveworkspacetomonitor "$TERTIARY_WS $tertiary_monitor" 2>/dev/null || true
+    fi
+    
+    # Switch main monitor to workspace 1 to ensure it's active
+    hyprctl dispatch focusmonitor "$main_monitor"
+    hyprctl dispatch workspace 1
+    
+    echo "Workspace bindings complete:"
+    echo "- Main monitor ($main_monitor): workspaces 1-10 (locked)"
+    echo "- Secondary monitor ($secondary_monitor): workspace $SECONDARY_WS (locked)"
+    echo "- Tertiary monitor ($tertiary_monitor): workspace $TERTIARY_WS (locked)"
+}
+
+# Function to setup single monitor (laptop only)
+setup_single_monitor() {
+  echo "Setting up single monitor (laptop only)"
+  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,0x0,1.0"
+}
+
+# Function to setup dual monitor with external display
+setup_dual_monitor() {
+  local external_monitor="$1"
+  echo "Setting up dual monitor: $LAPTOP_DISPLAY + $external_monitor"
+
+  # Get external monitor resolution
+  EXT_RES=$(hyprctl monitors -j | jq -r ".[] | select(.name==\"$external_monitor\") | .modes[0] | \"\(.width)x\(.height)@\(.refreshRate)\"")
+
+  # Common dual monitor setups
+  if [[ "$EXT_RES" == *"3840x2160"* ]]; then
+    # 4K external monitor
+    echo "Detected 4K external monitor"
+    hyprctl keyword monitor "$external_monitor,3840x2160@60,0x0,1.0"
+    hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,3840x1296,1.25"
+  elif [[ "$EXT_RES" == *"2560x1440"* ]]; then
+    # 1440p external monitor
+    echo "Detected 1440p external monitor"
+    hyprctl keyword monitor "$external_monitor,2560x1440@60,0x0,1.0"
+    hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,2560x1440,1.25"
+  else
+    # Generic external monitor - place side by side
+    echo "Detected generic external monitor: $EXT_RES"
+    hyprctl keyword monitor "$external_monitor,preferred,0x0,1.0"
+    hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,auto-right,1.25"
+  fi
+  
+  # Set workspace bindings - external monitor as main, laptop as secondary
+  setup_workspace_bindings "$external_monitor" "$LAPTOP_DISPLAY"
+}
+
+# Function to setup home office configuration
+setup_home_office() {
+  echo "Setting up home office configuration"
+  
+  # Main monitor (DP-4) - 2560x1440 positioned at right
+  hyprctl keyword monitor "DP-4,2560x1440@59.95,3326x869,1.0"
+  
+  # Ultrawide monitor (DP-3) - 2560x1080 rotated portrait, positioned middle
+  hyprctl keyword monitor "DP-3,2560x1080@60.0,2246x0,1.0"
+  hyprctl keyword monitor "DP-3,transform,1"
+  
+  # Laptop display (eDP-1) - positioned at left
+  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60.03,326x1229,1.0"
+  
+  # Set workspace bindings - DP-4 as main, others locked
+  setup_workspace_bindings "DP-4" "$LAPTOP_DISPLAY" "DP-3"
+}
+
+# Function to setup work office configuration
+setup_work_office() {
+  echo "Setting up work office configuration"
+  
+  # 4K external monitor (DP-5) - positioned as main display
+  hyprctl keyword monitor "DP-5,3840x2160@60,0x0,1.0"
+  
+  # Laptop display (eDP-1) - positioned to the right of 4K monitor
+  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,3840x1296,1.25"
+  
+  # Set workspace bindings - DP-5 as main, laptop as secondary
+  setup_workspace_bindings "DP-5" "$LAPTOP_DISPLAY"
+}
+
+# Function to setup triple+ monitor (fallback for other configurations)
+setup_multi_monitor() {
+  echo "Setting up multi-monitor configuration"
+  local monitors_array=($MONITORS)
+  local external_monitors=()
+
+  # Check if this is the home office setup
+  if [[ "$MONITORS" == *"DP-3"* && "$MONITORS" == *"DP-4"* && "$MONITORS" == *"eDP-1"* ]]; then
+    setup_home_office
+    return
+  fi
+
+  # Check if this is the work office setup
+  if [[ "$MONITORS" == *"DP-5"* && "$MONITORS" == *"eDP-1"* ]]; then
+    setup_work_office
+    return
+  fi
+
+  # Separate laptop display from external monitors
+  for monitor in "${monitors_array[@]}"; do
+    if [[ "$monitor" != "$LAPTOP_DISPLAY" ]]; then
+      external_monitors+=("$monitor")
+    fi
+  done
+
+  # Primary external monitor (usually the largest/preferred)
+  primary_ext="${external_monitors[0]}"
+  hyprctl keyword monitor "$primary_ext,preferred,0x0,1.0"
+
+  # Laptop display to the right
+  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,auto-right,1.25"
+
+  # Additional external monitors
+  for i in $(seq 1 $((${#external_monitors[@]} - 1))); do
+    hyprctl keyword monitor "${external_monitors[$i]},preferred,auto-left,1.0"
+  done
+  
+  # Set workspace bindings - primary external as main, laptop and secondary external as locked
+  local secondary_ext="${external_monitors[1]:-}"
+  setup_workspace_bindings "$primary_ext" "$LAPTOP_DISPLAY" "$secondary_ext"
+}
+
+# Main logic
+echo "Detected $MONITOR_COUNT monitor(s): $MONITORS"
+
+case $MONITOR_COUNT in
+1)
+  setup_single_monitor
+  ;;
+2)
+  # Check for specific dual monitor setups first
+  if [[ "$MONITORS" == *"DP-5"* && "$MONITORS" == *"eDP-1"* ]]; then
+    setup_work_office
+  else
+    # Find the external monitor for generic dual monitor setup
+    external_monitor=$(echo "$MONITORS" | grep -v "$LAPTOP_DISPLAY" | head -1)
+    setup_dual_monitor "$external_monitor"
+  fi
+  ;;
+*)
+  setup_multi_monitor
+  ;;
+esac
+
+echo "Monitor setup complete"
+

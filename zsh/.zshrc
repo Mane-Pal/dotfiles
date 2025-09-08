@@ -559,3 +559,11 @@ gchb() {
 }
 
 export EDITOR=nvim
+
+# Task Master aliases added on 11/07/2025
+alias tm='task-master'
+alias taskmaster='task-master'
+
+
+# Created by `pipx` on 2025-09-02 12:01:31
+export PATH="$PATH:/home/manepal/.local/bin"
