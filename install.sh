@@ -37,18 +37,34 @@ cd "$(dirname "$0")"
 # Available packages
 PACKAGES=(
   "git"
-  "zsh" 
+  "zsh"
   "nvim"
   "hypr"
   "foot"
   "mako"
+  "scripts"
 )
 
 install_package() {
   local package="$1"
   if [[ -d "$package" ]]; then
     info "Installing $package..."
-    stow "$package"
+    stow -t ~ "$package"
+
+    # Post-install actions for specific packages
+    case "$package" in
+      "scripts")
+        info "Enabling systemd user services..."
+        # Reload systemd user daemon to pick up new services
+        systemctl --user daemon-reload
+
+        # Enable and start battery monitor if available
+        if [[ -f "$HOME/.config/systemd/user/geoloc-battery-monitor.timer" ]]; then
+          systemctl --user enable --now geoloc-battery-monitor.timer
+          info "Battery monitor enabled and started"
+        fi
+        ;;
+    esac
   else
     warn "Package $package not found, skipping"
   fi

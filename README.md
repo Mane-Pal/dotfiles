@@ -8,8 +8,8 @@ Personal configuration files managed with GNU Stow for easy deployment and theme
 # Install all configs
 ./install.sh
 
-# Install specific configs  
-stow git zsh nvim hypr foot waybar mako
+# Install specific configs
+stow git zsh nvim hypr foot waybar mako scripts
 ```
 
 ## Structure
@@ -33,6 +33,9 @@ dotfiles/
 │   └── .config/waybar/
 ├── mako/         # Mako notification daemon
 │   └── .config/mako/
+├── scripts/      # Personal utility scripts
+│   ├── .local/bin/
+│   └── .config/systemd/user/
 ├── themes/       # Theme configurations
 │   ├── gruvbox/
 │   ├── catppuccin/
@@ -46,6 +49,21 @@ Switch themes with:
 ```bash
 geoloc-theme-set gruvbox
 geoloc-theme-set catppuccin
+```
+
+## Scripts Package
+
+The `scripts` package includes personal utility scripts and systemd user services:
+
+### Battery Monitor
+The battery monitor is automatically enabled when installing the scripts package. It will:
+- Check battery level every 30 seconds
+- Send a notification when battery drops below 15%
+- Only run on systems with a battery (laptops)
+
+Check status with:
+```bash
+systemctl --user status geoloc-battery-monitor.timer
 ```
 
 ## Requirements

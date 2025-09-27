@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Geoloc Battery Monitor Script
+# Checks battery level and sends notification if low
+
+# Check if battery exists
+if [ ! -d /sys/class/power_supply/BAT* ] 2>/dev/null; then
+    # No battery found, exit silently
+    exit 0
+fi
+
+# Get battery level
+for battery in /sys/class/power_supply/BAT*; do
+    if [ -f "$battery/capacity" ]; then
+        bat_level=$(cat "$battery/capacity" 2>/dev/null)
+        break
+    fi
+done
+
+# Check if we got a valid battery level
+if [ -z "$bat_level" ] || [ "$bat_level" -eq 0 ]; then
+    exit 0
+fi
+
+# Send notification if battery is low (below 15%)
+if [ "$bat_level" -lt 15 ]; then
+    notify-send "Low Battery" "Battery level: ${bat_level}%" -u critical
+fi
