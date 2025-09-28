@@ -43,6 +43,11 @@ PACKAGES=(
   "foot"
   "mako"
   "scripts"
+  "starship"
+  "fastfetch"
+  "fontconfig"
+  "btop"
+  "lazygit"
 )
 
 install_package() {

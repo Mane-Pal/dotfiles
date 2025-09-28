@@ -1,5 +1,42 @@
 [user]
 	name = Mads Nedergaard Paulsen
 	email = mads@mindway.ai
+
 [core]
 	excludesfile = /home/manepal/.gitignore_global
+	editor = nvim
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	side-by-side = true
+	line-numbers = true
+	syntax-theme = Catppuccin Mocha
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
+
+[alias]
+	s = status -sb
+	co = checkout
+	br = branch
+	cm = commit -m
+	ca = commit --amend
+	lg = log --oneline --graph --decorate
+	undo = reset --soft HEAD~1
+	unstage = reset HEAD --
+
+[pull]
+	rebase = false
+
+[init]
+	defaultBranch = main
+
+[push]
+	autoSetupRemote = true
