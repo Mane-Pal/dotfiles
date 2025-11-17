@@ -1,0 +1,115 @@
+/* Catppuccin Mocha theme for waybar */
+
+* {
+  font-family: "JetBrains Mono Nerd Font", monospace;
+  font-size: 13px;
+  color: #cdd6f4;
+}
+
+window#waybar {
+  background-color: #1e1e2e;
+  border-bottom: 2px solid #89b4fa;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+}
+
+/* Module spacing */
+.modules-right > widget:not(:last-child) {
+  margin-right: 8px;
+}
+
+/* Workspaces */
+#workspaces {
+  padding: 0 5px;
+  background-color: transparent;
+}
+
+#workspaces button {
+  padding: 4px 10px;
+  margin: 0 2px;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #6c7086;
+  border: none;
+  font-size: 14px;
+  min-width: 24px;
+}
+
+#workspaces button:hover {
+  background-color: #313244;
+  color: #cdd6f4;
+}
+
+#workspaces button.active {
+  background-color: #89b4fa;
+  color: #1e1e2e;
+  font-weight: bold;
+}
+
+#workspaces button.urgent {
+  background-color: #f38ba8;
+  color: #cdd6f4;
+}
+
+/* Clock */
+#clock {
+  padding: 0 15px;
+  font-weight: bold;
+  color: #cdd6f4;
+}
+
+/* Module styling */
+#bluetooth,
+#network,
+#pulseaudio,
+#cpu,
+#battery,
+#custom-power-menu {
+  padding: 0 12px;
+  margin: 0 2px;
+  border-radius: 6px;
+  background-color: #313244;
+}
+
+#bluetooth {
+  color: #89b4fa;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+#network {
+  color: #a6e3a1;
+}
+
+#pulseaudio {
+  color: #f9e2af;
+}
+
+#cpu {
+  color: #fab387;
+}
+
+#battery {
+  color: #f38ba8;
+}
+
+#battery.warning:not(.charging) {
+  color: #f9e2af;
+}
+
+#battery.critical:not(.charging) {
+  background-color: #f38ba8;
+  color: #1e1e2e;
+  animation: blink 1s infinite;
+}
+
+#custom-power-menu {
+  color: #cba6f7;
+}
+
+@keyframes blink {
+  50% {
+    background-color: #eba0ac;
+    color: #1e1e2e;
+  }
+}

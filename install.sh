@@ -39,9 +39,12 @@ PACKAGES=(
   "git"
   "zsh"
   "nvim"
+  "tmux"
   "hypr"
-  "foot"
+  "kitty"
   "mako"
+  "waybar"
+  "themes"
   "scripts"
   "starship"
   "fastfetch"
@@ -58,6 +61,18 @@ install_package() {
 
     # Post-install actions for specific packages
     case "$package" in
+      "themes")
+        # Create default theme symlink if it doesn't exist
+        if [[ ! -e "$HOME/.config/themes/current" ]]; then
+          info "Creating default theme symlink (gruvbox)..."
+          ln -sf gruvbox "$HOME/.config/themes/current"
+        fi
+        # Create nvim theme symlink
+        if [[ -d "$HOME/.config/nvim/lua/plugins" ]]; then
+          info "Linking nvim theme file..."
+          ln -sf "$HOME/.config/themes/current/nvim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
+        fi
+        ;;
       "scripts")
         info "Enabling systemd user services..."
         # Reload systemd user daemon to pick up new services

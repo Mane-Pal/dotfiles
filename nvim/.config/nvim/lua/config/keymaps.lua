@@ -34,15 +34,28 @@ map("n", "<leader>xd", function()
   vim.notify("Quickfix list cleared", vim.log.levels.INFO)
 end, { desc = "Clear Quickfix List" })
 
--- Linear CLI which-key group
+-- Remap Lazy from <leader>l to <leader>L (uppercase)
+-- Delete the default <leader>l binding and remap to <leader>L
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  callback = function()
+    -- Delete old bindings
+    pcall(vim.keymap.del, "n", "<leader>l")
+    pcall(vim.keymap.del, "n", "<leader>L")
+
+    -- Remap Lazy to uppercase L
+    vim.keymap.set("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Lazy" })
+  end,
+})
+
+-- snacks-linear which-key group (using lowercase l)
 local wk = require("which-key")
 wk.add({
   { "<leader>l", group = "Linear" },
-  { "<leader>lS", desc = "Setup integration" },
-  { "<leader>la", desc = "Test authentication" },
-  { "<leader>ls", desc = "Sync issues" },
-  { "<leader>lb", desc = "Browse local issues" },
-  { "<leader>lf", desc = "Search all issues" },
-  { "<leader>lg", desc = "Create git branch" },
-  { "<leader>lc", desc = "Config (init/edit/show)" },
+  { "<leader>ll", desc = "List all issues (searchable)" },
+  { "<leader>li", desc = "Issues (todo/in-progress)" },
+  { "<leader>lm", desc = "My assigned issues" },
+  { "<leader>lt", desc = "Browse teams" },
+  { "<leader>ln", desc = "Create new issue" },
+  { "<leader>lc", desc = "Clear cache" },
 })

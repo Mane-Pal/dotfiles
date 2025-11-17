@@ -1,56 +1,114 @@
 return {
-  -- Linear CLI integration for Neovim
+  -- snacks-linear: Linear integration using snacks.nvim
   {
-    dir = "/home/manepal/git/mane-pal/linear-cli.nvim",
-    name = "linear-cli.nvim",
+    dir = "/home/manepal/git/mane-pal/snacks-linear",
+    name = "snacks-linear",
     dependencies = {
-      "nvim-telescope/telescope.nvim", -- Enhanced UI for issue selection
+      "folke/snacks.nvim",
     },
     cmd = {
-      "LinearSetup",
-      "LinearAuth",
-      "LinearSync",
-      "LinearBrowse", 
+      "LinearIssues",
+      "LinearTeams",
+      "LinearProjects",
+      "LinearProjectsAll",
       "LinearSearch",
-      "LinearConfig",
-      "LinearBranch",
+      "LinearSearchProjects",
+      "LinearIssue",
+      "LinearCreate",
+      "LinearClearCache",
     },
     keys = {
-      { "<leader>lS", "<cmd>LinearSetup<cr>", desc = "Linear: Setup integration" },
-      { "<leader>la", "<cmd>LinearAuth<cr>", desc = "Linear: Test authentication" },
-      { "<leader>ls", "<cmd>LinearSync<cr>", desc = "Linear: Sync issues" },
-      { "<leader>lb", "<cmd>LinearBrowse<cr>", desc = "Linear: Browse local issues" },
-      { "<leader>lf", "<cmd>LinearSearch<cr>", desc = "Linear: Search all issues" },
-      { "<leader>lg", "<cmd>LinearBranch<cr>", desc = "Linear: Create git branch" },
-      { "<leader>lc", "<cmd>LinearConfig<cr>", desc = "Linear: Config (init/edit/show)" },
+      -- Issue browsing (using <leader>l - lowercase l for Linear, easier to type!)
+      {
+        "<leader>ll",
+        function()
+          require("snacks-linear").pick_issues()
+        end,
+        desc = "Linear: List all issues (searchable)",
+      },
+      {
+        "<leader>li",
+        function()
+          require("snacks-linear").pick_issues({ state = { "started", "unstarted" } })
+        end,
+        desc = "Linear: Issues (todo/in-progress)",
+      },
+      {
+        "<leader>lm",
+        function()
+          require("snacks-linear").pick_issues({ assignee = "me" })
+        end,
+        desc = "Linear: My assigned issues",
+      },
+      {
+        "<leader>lt",
+        function()
+          require("snacks-linear").pick_teams()
+        end,
+        desc = "Linear: Browse teams",
+      },
+      {
+        "<leader>lp",
+        function()
+          require("snacks-linear").pick_projects()
+        end,
+        desc = "Linear: Browse projects (active)",
+      },
+      {
+        "<leader>lpa",
+        function()
+          require("snacks-linear").browse_projects({ include_completed = true })
+        end,
+        desc = "Linear: Browse all projects (including completed)",
+      },
+      -- Search
+      {
+        "<leader>lsi",
+        function()
+          require("snacks-linear").search_issues()
+        end,
+        desc = "Linear: Search issues by title",
+      },
+      {
+        "<leader>lsp",
+        function()
+          require("snacks-linear").search_projects()
+        end,
+        desc = "Linear: Search projects by name",
+      },
+      -- Issue creation
+      {
+        "<leader>ln",
+        function()
+          require("snacks-linear").create_issue()
+        end,
+        desc = "Linear: Create new issue",
+      },
+      -- Utilities
+      {
+        "<leader>lc",
+        "<cmd>LinearClearCache<cr>",
+        desc = "Linear: Clear cache",
+      },
     },
     config = function()
-      require("linear").setup({
-        -- CLI command (if not in PATH, use full path)
-        cli_cmd = "linear",
-        
-        -- Enable default keymaps (set to false if you prefer the above keys)
-        default_keymaps = false, -- We're using explicit keys above
-        
-        -- Telescope configuration
-        telescope = {
-          theme = "dropdown",
-          layout_opts = {
-            width = 0.9,
-            height = 0.7,
-          },
-        },
-        
-        -- Auto-sync issues when starting Neovim
-        auto_sync = false, -- Set to true if you want automatic syncing
-        
-        -- Issue file handling
-        issues = {
-          -- Auto-open issue file after creating branch
-          auto_open_on_branch = true,
-          -- File extension for issue files
-          file_extension = ".md",
-        },
+      require("snacks-linear").setup({
+        -- Set your default team key here (optional)
+        -- team = "ENG", -- Uncomment and set your team key
+
+        -- Cache settings
+        cache_ttl = 300, -- 5 minutes
+
+        -- Custom icons (optional)
+        -- icons = {
+        --   logo = "▲",
+        -- },
+
+        -- Custom keymaps for issue buffers (optional)
+        -- keys = {
+        --   comment = { "a", "linear_comment", desc = "Add Comment" },
+        --   close = { "c", "linear_close", desc = "Close" },
+        -- },
       })
     end,
   },

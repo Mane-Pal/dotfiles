@@ -162,8 +162,7 @@ fi
 
 # Initialize zoxide (smart cd)
 if command -v zoxide >/dev/null 2>&1; then
-    eval "$(zoxide init zsh)"
-    alias cd='z'
+    [[ $- == *i* ]] && eval "$(zoxide init --cmd cd zsh)"
 fi
 
 # ============================================================================
@@ -425,3 +424,5 @@ export PATH="$PATH:/home/manepal/.local/bin"
 
 # Starship prompt
 eval "$(starship init zsh)"
+
+
