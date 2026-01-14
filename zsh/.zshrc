@@ -136,6 +136,11 @@ if [ -f "$HOME/.config/shell/dev-environment" ]; then
     . "$HOME/.config/shell/dev-environment"
 fi
 
+# Source shell helper functions
+for helper in "$HOME/.config/shell"/*-helpers.sh; do
+    [ -f "$helper" ] && . "$helper"
+done
+
 # Use Keeper SSH agent instead of regular ssh-agent
 export SSH_AUTH_SOCK='/home/manepal/.config/Keeper Password Manager/keeper-ssh-agent.sock'
 
@@ -283,109 +288,6 @@ extract() {
         echo "'$1' is not a valid file"
     fi
 }
-
-# ============================================================================
-# NOTE-TAKING & KNOWLEDGE MANAGEMENT
-# ============================================================================
-
-# Quick note functions using obsidian.nvim structure
-alias ni='nvim ~/notes/0-inbox/$(date +%Y%m%d%H%M).md'  # Quick inbox capture
-alias ns='nvim ~/scratch/$(date +%Y%m%d%H%M).md'       # Scratch notes
-alias nd='nvim ~/notes/daily/$(date +%Y-%m-%d).md'     # Daily note
-
-# Tmux-based note functions (for seamless workflow integration)
-nn() {  # New inbox note with title prompt
-    echo -n "Note title: "
-    read title
-    if [[ -z "$title" ]]; then
-        echo "No title provided, aborting."
-        return 1
-    fi
-    
-    # Clean title for filename (just the title, no date)
-    local clean_title=$(echo "$title" | sed 's/[^a-zA-Z0-9 ]//g' | tr ' ' '-' | tr '[:upper:]]' '[:lower:]')
-    local file="$HOME/notes/0-inbox/${clean_title}.md"
-    
-    # Only apply template if file doesn't exist
-    if [[ ! -f "$file" ]]; then
-        local nvim_cmd="nvim -c 'autocmd VimEnter * ++once ObsidianTemplate quick.md' '$file'"
-    else
-        local nvim_cmd="nvim '$file'"
-    fi
-    
-    if [[ -n "$TMUX" ]]; then
-        # Already in tmux
-        tmux new-window -c "$HOME/notes/0-inbox" "$nvim_cmd"
-    else
-        # Not in tmux, create/attach to notes session
-        tmux new-session -A -s notes \; new-window -c "$HOME/notes/0-inbox" "$nvim_cmd"
-    fi
-}
-
-nnd() { # Daily note in tmux notes session
-    local file="$HOME/notes/daily/$(date +%Y-%m-%d).md"
-    
-    if [[ -n "$TMUX" ]]; then
-        # Already in tmux, just create new window
-        tmux new-window -c "$HOME/notes/daily" "nvim '$file'"
-    else
-        # Not in tmux, create/attach to notes session
-        tmux new-session -A -s notes \; new-window -c "$HOME/notes/daily" "nvim '$file'"
-    fi
-}
-
-nns() { # Scratch note in tmux notes session
-    local file="$HOME/scratch/$(date +%Y%m%d%H%M).md"
-    
-    if [[ -n "$TMUX" ]]; then
-        # Already in tmux, just create new window
-        tmux new-window -c "$HOME/scratch" "nvim '$file'"
-    else
-        # Not in tmux, create/attach to notes session
-        tmux new-session -A -s notes \; new-window -c "$HOME/scratch" "nvim '$file'"
-    fi
-}
-
-# Structured note creation
-np() { # Project note
-    local project_name="${1:-project}"
-    nvim ~/notes/projects/${project_name}.md
-}
-
-m() { # Meeting note
-    local meeting_name="${1:-meeting}"
-    nvim ~/notes/meetings/$(date +%Y%m%d)-${meeting_name}.md
-}
-
-na() { # Area note (ongoing responsibilities)
-    local area_name="${1:-area}"
-    nvim ~/notes/areas/${area_name}.md
-}
-
-nr() { # Reference note
-    local ref_name="${1:-reference}"
-    nvim ~/notes/reference/${ref_name}.md
-}
-
-# Note search and navigation
-nf() { # Find and edit notes
-    local note
-    note=$(find ~/notes -name "*.md" -type f | fzf --preview 'bat --color=always {}' --preview-window=right:50%:wrap)
-    [[ -n "$note" ]] && nvim "$note"
-}
-
-nfg() { # Grep through notes and edit
-    local match
-    match=$(rg --type md --line-number --no-heading --color=always "${1:-}" ~/notes | fzf --ansi --delimiter ':' --preview 'bat --color=always --highlight-line {2} {1}' --preview-window=right:50%:wrap)
-    [[ -n "$match" ]] && nvim "+$(echo $match | cut -d: -f2)" "$(echo $match | cut -d: -f1)"
-}
-
-# Daily inbox processing
-ninbox() { # Process inbox notes
-    find ~/notes/0-inbox -name "*.md" -type f | head -10 | xargs -I {} echo "Processing: {}"
-    find ~/notes/0-inbox -name "*.md" -type f | head -10 | fzf --preview 'bat --color=always {}' --preview-window=right:50%:wrap | xargs -I {} nvim {}
-}
-
 
 
 # Git helper functions

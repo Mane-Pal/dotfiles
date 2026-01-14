@@ -1,0 +1,169 @@
+{
+  "tui": {
+    "scroll_speed": 2,
+    "scroll_acceleration": {
+      "enabled": true
+    }
+  },
+  "mcp": {
+    "linear": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "mcp-remote",
+        "https://mcp.linear.app/mcp"
+      ],
+      "enabled": true
+    }
+  },
+  "watcher": {
+    "ignore": [
+      "node_modules",
+      ".git",
+      "dist",
+      "build",
+      ".cache",
+      "*.log"
+    ]
+  },
+  "share": "manual",
+  "autoupdate": "notify",
+  "agent": {
+    "plan": {
+      "color": "#7aa2f7",
+      "disabled_tools": [
+        "bash",
+        "write",
+        "edit"
+      ]
+    },
+    "build": {
+      "color": "#9ece6a"
+    },
+    "explore": {
+      "color": "#bb9af7",
+      "disabled_tools": [
+        "write",
+        "edit",
+        "bash"
+      ]
+    }
+  },
+  "permission": {
+    "edit": {
+      "*": "allow",
+      "*.env*": "deny",
+      "*.pem": "deny",
+      "*.key": "deny",
+      "*credentials*": "deny",
+      "*secret*": "deny",
+      ".git/*": "deny",
+      "package-lock.json": "ask",
+      "yarn.lock": "ask",
+      "pnpm-lock.yaml": "ask"
+    },
+    "write": {
+      "*": "allow",
+      "*.env*": "deny",
+      "*.pem": "deny",
+      "*.key": "deny",
+      "*credentials*": "deny",
+      "*secret*": "deny",
+      ".git/*": "deny",
+      "package-lock.json": "ask",
+      "yarn.lock": "ask",
+      "pnpm-lock.yaml": "ask"
+    },
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow",
+      "*.pem": "deny",
+      "*.key": "deny",
+      "*credentials*": "deny",
+      "*secret*": "deny",
+      "*password*": "deny",
+      "~/.ssh/*": "deny",
+      "~/.aws/*": "deny"
+    },
+    "bash": {
+      "*": "ask",
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "git show*": "allow",
+      "git branch*": "allow",
+      "git remote*": "allow",
+      "git stash list*": "allow",
+      "git tag*": "allow",
+      "git blame*": "allow",
+      "git shortlog*": "allow",
+      "git rev-parse*": "allow",
+      "git add*": "deny",
+      "git commit*": "deny",
+      "git push*": "deny",
+      "git reset*": "deny",
+      "git rebase*": "deny",
+      "git merge*": "deny",
+      "git cherry-pick*": "deny",
+      "gh pr view*": "allow",
+      "gh pr list*": "allow",
+      "gh pr diff*": "allow",
+      "gh pr checks*": "allow",
+      "gh pr status*": "allow",
+      "gh issue view*": "allow",
+      "gh issue list*": "allow",
+      "gh issue status*": "allow",
+      "gh repo view*": "allow",
+      "gh api *": "allow",
+      "gh pr create*": "deny",
+      "gh pr merge*": "deny",
+      "gh pr close*": "deny",
+      "gh pr edit*": "ask",
+      "gh pr comment*": "ask",
+      "gh issue create*": "deny",
+      "gh issue close*": "deny",
+      "gh issue edit*": "ask",
+      "npm list*": "allow",
+      "npm outdated*": "allow",
+      "npm install*": "ask",
+      "npm uninstall*": "deny",
+      "ls *": "allow",
+      "pwd": "allow",
+      "which *": "allow",
+      "cat *": "allow",
+      "head *": "allow",
+      "tail *": "allow",
+      "wc *": "allow",
+      "find *": "allow",
+      "rm *": "ask",
+      "rm -rf *": "deny",
+      "sudo *": "deny",
+      "chmod *": "ask",
+      "chown *": "deny",
+      "curl * | *": "deny",
+      "wget * | *": "deny"
+    },
+    "task": {
+      "*": "ask",
+      "explore": "allow",
+      "general": "allow"
+    },
+    "glob": "allow",
+    "grep": "allow",
+    "doom_loop": "ask",
+    "external_directory": "ask",
+    "linear_*": {
+      "*": "ask",
+      "linear_list_*": "allow",
+      "linear_get_*": "allow",
+      "linear_search_*": "allow",
+      "linear_create_*": "deny",
+      "linear_update_*": "deny",
+      "linear_delete_*": "deny"
+    }
+  },
+  "$schema": "https://opencode.ai/config.json"
+}

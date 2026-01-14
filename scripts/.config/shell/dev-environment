@@ -1,0 +1,8 @@
+
+# Auto-start Hyprland on tty1
+[[ -z $DISPLAY && $(tty) == /dev/tty1 ]] && exec Hyprland
+
+# Python development environment (pyenv)
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"

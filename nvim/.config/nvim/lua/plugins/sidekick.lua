@@ -7,8 +7,11 @@ return {
         backend = "tmux",
         enabled = true,
       },
-      claude = {
-        cmd = { "env", "SHELL=/bin/bash", "claude" },
+      cursor_agent = {
+        cmd = { "cursor-agent" },
+      },
+      opencode = {
+        cmd = { "opencode" },
       },
     },
   },
@@ -46,17 +49,25 @@ return {
       mode = { "n", "v" },
     },
     {
-      "<leader>ac",
+      "<leader>au",
       function()
-        require("sidekick.cli").toggle({ name = "claude", focus = true })
+        require("sidekick.cli").toggle({ name = "cursor_agent", focus = true })
       end,
-      desc = "Sidekick Claude Toggle",
+      desc = "Sidekick Cursor Agent Toggle",
+      mode = { "n", "v" },
+    },
+    {
+      "<leader>ao",
+      function()
+        require("sidekick.cli").toggle({ name = "opencode", focus = true })
+      end,
+      desc = "Sidekick OpenCode Toggle",
       mode = { "n", "v" },
     },
     {
       "<leader>ap",
       function()
-        require("sidekick.cli").select_prompt()
+        require("sidekick.cli").prompt()
       end,
       desc = "Sidekick Ask Prompt",
       mode = { "n", "v" },
