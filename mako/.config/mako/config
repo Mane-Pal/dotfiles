@@ -1,14 +1,40 @@
-text-color=#cad3f5
-border-color=#c6d0f5
-background-color=#24273a
+# Mako Notification Daemon Configuration
+# Catppuccin Mocha Theme
+
+# ============================================================================
+# CATPPUCCIN MOCHA COLORS
+# ============================================================================
+
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#89b4fa
+progress-color=#a6e3a1
+
+# ============================================================================
+# GENERAL SETTINGS
+# ============================================================================
+
 width=420
 height=110
 padding=10
 border-size=2
+border-radius=4
 font=Liberation Sans 11
 anchor=top-right
 default-timeout=5000
 max-icon-size=32
+
+# ============================================================================
+# URGENCY OVERRIDES
+# ============================================================================
+
+[urgency=high]
+border-color=#f38ba8
+background-color=#302d41
+
+# ============================================================================
+# APP-SPECIFIC SETTINGS
+# ============================================================================
 
 [app-name=Spotify]
 invisible=1

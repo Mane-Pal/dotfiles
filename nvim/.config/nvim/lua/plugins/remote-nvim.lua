@@ -45,7 +45,10 @@ return {
           },
           state = {
             base = vim.fn.stdpath("state"), -- ~/.local/state/nvim
-            dirs = "*",
+            dirs = {
+              "lazy", -- Only sync lazy state, not logs
+              "shada",
+            },
             compression = {
               enabled = true,
             },

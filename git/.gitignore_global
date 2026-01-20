@@ -1,0 +1,80 @@
+# Global gitignore - patterns ignored in all repositories
+# Managed via dotfiles/git stow package
+
+# ============================================================================
+# OS Generated Files
+# ============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ============================================================================
+# Editor/IDE Files
+# ============================================================================
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ============================================================================
+# Language/Build Artifacts
+# ============================================================================
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+.env
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Rust
+target/
+Cargo.lock
+
+# Go
+vendor/
+
+# ============================================================================
+# Tool Specific
+# ============================================================================
+# direnv
+.direnv/
+.envrc
+
+# mise/asdf
+.tool-versions
+.mise.toml
+
+# ============================================================================
+# Security - Never commit these
+# ============================================================================
+*.pem
+*.key
+*.crt
+.env.local
+.env.*.local
+secrets/
+credentials.json

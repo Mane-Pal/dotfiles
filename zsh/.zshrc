@@ -142,7 +142,7 @@ for helper in "$HOME/.config/shell"/*-helpers.sh; do
 done
 
 # Use Keeper SSH agent instead of regular ssh-agent
-export SSH_AUTH_SOCK='/home/manepal/.config/Keeper Password Manager/keeper-ssh-agent.sock'
+export SSH_AUTH_SOCK="$HOME/.config/Keeper Password Manager/keeper-ssh-agent.sock"
 
 
 # ============================================================================
@@ -321,10 +321,9 @@ export EDITOR=nvim
 
 
 eval "$(just --completions zsh)"
-# Created by `pipx` on 2025-09-02 12:01:31
-export PATH="$PATH:/home/manepal/.local/bin"
 
-# Starship prompt
+# Add local bin to path
+export PATH="$PATH:$HOME/.local/bin"
+
+# Starship prompt (must be last)
 eval "$(starship init zsh)"
-
-
