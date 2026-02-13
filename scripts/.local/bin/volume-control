@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# A script to control volume and display a notification.
+
+# You can change the icons here:
+icon_up="audio-volume-high"
+icon_down="audio-volume-medium"
+icon_muted="audio-volume-muted"
+
+# The notification ID so we can replace it
+notification_id=507
+
+# Function to get the current volume
+get_volume() {
+    wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}'
+}
+
+# Function to check if muted
+is_muted() {
+    wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q "MUTED"
+}
+
+# Function to generate a progress bar
+generate_bar() {
+    local volume=$1
+    local bar=""
+    # 20 characters for the bar
+    local filled=$(($volume / 5))
+    local empty=$((20 - filled))
+
+    for ((i=0; i<filled; i++)); do
+        bar+="█"
+    done
+    for ((i=0; i<empty; i++)); do
+        bar+="─"
+    done
+    echo "$bar"
+}
+
+# Send the notification
+send_notification() {
+    local timeout=1000 # in milliseconds
+    volume=$(get_volume)
+    if is_muted; then
+        icon="$icon_muted"
+        text="Volume: Muted"
+        bar=$(generate_bar 0)
+    else
+        if [ "$volume" -gt 50 ]; then
+            icon="$icon_up"
+        else
+            icon="$icon_down"
+        fi
+        text="Volume: $volume%"
+        bar=$(generate_bar $volume)
+    fi
+    notify-send -i "$icon" -r "$notification_id" -t "$timeout" "$text" "$bar"
+}
+
+case "$1" in
+    up)
+        # Unmute if muted
+        wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
+        # Increase volume
+        wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+
+        send_notification
+        ;;
+    down)
+        # Unmute if muted
+        wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
+        # Decrease volume
+        wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+        send_notification
+        ;;
+    mute)
+        # Toggle mute
+        wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+        send_notification
+        ;;
+    *)
+        echo "Usage: $0 up|down|mute"
+        exit 1
+        ;;
+esac

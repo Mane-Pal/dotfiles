@@ -1,0 +1,76 @@
+#!/bin/bash
+# Display custom zsh functions and aliases in wofi
+
+CHEATSHEET=$(cat <<'EOF'
+=== PROJECT NAVIGATION ===
+proj                         → FZF project picker (~/git)
+~iac                         → cd to aws_iac
+~gs                          → cd to GameScanner
+~helm                        → cd to HelmHub
+~sr                          → cd to StreamRider
+~dots                        → cd to dotfiles
+
+=== TERRAFORM ===
+tf [cmd]                     → terraform with auto AWS profile
+tfi                          → terraform init
+tfp                          → terraform plan
+tfa                          → terraform apply
+tfv                          → terraform validate
+
+=== KUBERNETES ===
+kgp                          → kubectl get pods
+kgs                          → kubectl get svc
+kgd                          → kubectl get deployments
+kl                           → kubectl logs -f
+kns                          → FZF namespace switcher
+klogs [ns]                   → FZF deployment log viewer
+
+=== GIT SHORTCUTS ===
+gsw                          → FZF branch switcher
+gcm [msg]                    → git commit -m
+gac [msg]                    → git add -A && commit
+gadd                         → FZF interactive git add
+gchb                         → FZF checkout branch
+fshow                        → FZF git log viewer
+
+=== FZF TOOLS ===
+fe [query]                   → FZF file search & edit
+fd [path]                    → FZF directory navigation
+fkill                        → FZF process killer
+fh                           → FZF command history
+
+=== BASE64/CERTS ===
+b64e [file]                  → base64 encode file
+b64d [str]                   → base64 decode string
+b64c [file]                  → base64 encode to clipboard
+certinfo [cert]              → show certificate details
+
+=== VPN ===
+vpn                          → connect to incuba VPN
+vpn status                   → check VPN connection
+
+=== LINEAR (terminal) ===
+linear-popup [action]        → floating Linear picker
+  issues/i                   → browse all issues
+  my/m                       → my assigned issues
+  create/c/new/n             → create new issue
+  projects/p                 → browse projects
+  search/s                   → search issues (API)
+  search-projects/sp         → search projects (API)
+  teams/t                    → browse teams
+
+=== CONFIG EDITS ===
+zshrc                        → edit & source zshrc
+hyprconf                     → edit hyprland.conf
+waybarconf                   → edit waybar config
+tmuxconf                     → edit tmux.conf
+kittyconf                    → edit kitty.conf
+
+=== FILE OPERATIONS ===
+extract [file]               → smart archive extraction
+ll / la / lt                 → eza list variants
+EOF
+)
+
+echo "$CHEATSHEET" | flock --nonblock /tmp/.wofi-cheat.lock -c \
+    "wofi -dmenu -i --width 50% --height 70% -p 'ZSH Cheatsheet'"

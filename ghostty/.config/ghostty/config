@@ -1,0 +1,71 @@
+# ============================================================================
+# GHOSTTY TERMINAL CONFIGURATION
+# ============================================================================
+# Matching Kitty setup with Catppuccin Mocha theme
+# Config location: ~/.config/ghostty/config
+
+# ============================================================================
+# THEME
+# ============================================================================
+
+# Ghostty has built-in Catppuccin support!
+theme = Catppuccin Mocha
+
+# ============================================================================
+# FONT CONFIGURATION
+# ============================================================================
+
+font-family = CommitMono Nerd Font
+font-size = 12
+
+# ============================================================================
+# CURSOR
+# ============================================================================
+
+cursor-style = block
+cursor-style-blink = true 
+
+# ============================================================================
+# WINDOW
+# ============================================================================
+
+window-padding-x = 8
+window-padding-y = 8
+window-decoration = false
+
+# Initial window size (columns x rows)
+window-width = 120
+window-height = 40
+
+# ============================================================================
+# MOUSE
+# ============================================================================
+
+mouse-hide-while-typing = true
+
+# ============================================================================
+# SCROLLBACK
+# ============================================================================
+
+# Scrollback buffer in bytes (~10MB)
+scrollback-limit = 10000000
+
+# ============================================================================
+# CLIPBOARD
+# ============================================================================
+
+clipboard-read = allow
+clipboard-write = allow
+
+# ============================================================================
+# KEYBINDINGS
+# ============================================================================
+
+# Minimal set matching Kitty configuration
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+keybind = ctrl+shift+equal=increase_font_size:1
+keybind = ctrl+shift+minus=decrease_font_size:1
+keybind = ctrl+shift+backspace=reset_font_size
+keybind = f11=toggle_fullscreen
+keybind = ctrl+shift+comma=reload_config

@@ -1,0 +1,64 @@
+/* Catppuccin Mocha theme for Wofi */
+
+* {
+    font-family: "CommitMono Nerd Font", monospace;
+    font-size: 14px;
+}
+
+window {
+    margin: 0px;
+    border: 2px solid #89b4fa;
+    border-radius: 12px;
+    background-color: #1e1e2e;
+}
+
+#input {
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #313244;
+    color: #cdd6f4;
+}
+
+#input:focus {
+    border: none;
+    outline: none;
+}
+
+#inner-box {
+    margin: 5px;
+    border: none;
+    background-color: transparent;
+}
+
+#outer-box {
+    margin: 5px;
+    border: none;
+    background-color: transparent;
+}
+
+#scroll {
+    margin: 0px;
+    border: none;
+}
+
+#text {
+    margin: 5px;
+    border: none;
+    color: #cdd6f4;
+}
+
+#entry {
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#entry:selected {
+    background-color: #313244;
+    border: 1px solid #89b4fa;
+}
+
+#entry:selected #text {
+    color: #89b4fa;
+}

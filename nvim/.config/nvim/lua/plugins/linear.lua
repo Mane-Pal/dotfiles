@@ -1,7 +1,7 @@
 return {
   -- snacks-linear: Linear integration using snacks.nvim
   {
-    dir = "/home/manepal/git/mane-pal/snacks-linear",
+    dir = vim.fn.expand("~/git/mane-pal/snacks-linear"),
     name = "snacks-linear",
     dependencies = {
       "folke/snacks.nvim",

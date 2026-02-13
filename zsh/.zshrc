@@ -144,6 +144,9 @@ done
 # Use Keeper SSH agent instead of regular ssh-agent
 export SSH_AUTH_SOCK="$HOME/.config/Keeper Password Manager/keeper-ssh-agent.sock"
 
+# Rootless Docker — use user-level daemon socket
+export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
+
 
 # ============================================================================
 # MODERN CLI TOOL REPLACEMENTS
@@ -170,6 +173,11 @@ if command -v zoxide >/dev/null 2>&1; then
     [[ $- == *i* ]] && eval "$(zoxide init --cmd cd zsh)"
 fi
 
+# Command not found handler (suggests packages via pkgfile)
+if [[ -f /usr/share/doc/pkgfile/command-not-found.zsh ]]; then
+    source /usr/share/doc/pkgfile/command-not-found.zsh
+fi
+
 # ============================================================================
 # PRODUCTIVITY ALIASES
 # ============================================================================
@@ -193,7 +201,7 @@ alias df='df -h'
 alias du='du -h'
 alias free='free -h'
 alias ps='ps auxf'
-alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
+alias psg='ps aux | grep -v grep | grep -i'
 
 # Network
 alias ping='ping -c 5'
@@ -324,6 +332,121 @@ eval "$(just --completions zsh)"
 
 # Add local bin to path
 export PATH="$PATH:$HOME/.local/bin"
+
+# ============================================================================
+# WORKFLOW HELPERS
+# ============================================================================
+
+# --- AWS/Terraform Workflow ---
+# Smart terraform wrapper with auto-detected AWS profile
+tf() {
+  local profile=""
+  local dir="${PWD}"
+
+  case "$dir" in
+    *gamescanner/prod*|*gs-prod*) profile="GS-prod" ;;
+    *gamescanner/stage*|*gs-stage*) profile="GS-stage" ;;
+    *mindway*|*aws_iac*) profile="terraform" ;;
+    *) profile="terraform" ;;
+  esac
+
+  AWS_PROFILE="$profile" terraform "$@"
+}
+
+alias tfi='tf init'
+alias tfp='tf plan'
+alias tfa='tf apply'
+alias tfv='tf validate'
+
+# --- Project Directory Navigation ---
+hash -d iac="$HOME/git/mindway/aws_iac"
+hash -d gs="$HOME/git/mindway/GameScanner"
+hash -d helm="$HOME/git/mindway/HelmHub"
+hash -d sr="$HOME/git/mindway/STreamRider"
+hash -d dots="$HOME/git/mane-pal/geoloc-os/dotfiles"
+
+# FZF project picker
+proj() {
+  local dir
+  dir=$(find ~/git -maxdepth 3 -type d -name ".git" 2>/dev/null |
+    sed 's|/.git$||' |
+    fzf --preview 'ls -la {}' --header "Select project")
+  [[ -n "$dir" ]] && cd "$dir"
+}
+
+# --- VPN Connection Helper ---
+vpn() {
+  case "${1:-incuba}" in
+    incuba)
+      sudo openfortivpn -c ~/.config/vpn/incuba.conf
+      ;;
+    status)
+      ip route | grep -q ppp && echo "VPN: Connected" || echo "VPN: Disconnected"
+      ;;
+    *)
+      echo "Usage: vpn [incuba|status]"
+      ;;
+  esac
+}
+
+# --- Certificate/Base64 Helpers ---
+b64e() { base64 -w 0 "$1" && echo; }
+b64d() { echo "$1" | base64 -d; }
+b64c() { base64 -w 0 "$1" | wl-copy && echo "Copied to clipboard"; }
+certinfo() { openssl x509 -in "$1" -text -noout; }
+
+# --- kubectl Helpers ---
+alias kgp='kubectl get pods'
+alias kgs='kubectl get svc'
+alias kgd='kubectl get deployments'
+alias kl='kubectl logs -f'
+
+kns() {
+  local ns
+  ns=$(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}' | tr ' ' '\n' | fzf)
+  [[ -n "$ns" ]] && kubectl config set-context --current --namespace="$ns" && echo "Namespace: $ns"
+}
+
+klogs() {
+  local ns="${1:-default}"
+  local deploy
+  deploy=$(kubectl get deployments -n "$ns" -o name | fzf --header "Select deployment in $ns")
+  [[ -n "$deploy" ]] && kubectl logs -n "$ns" "$deploy" -f
+}
+
+# --- Git Workflow ---
+gsw() {
+  local branch
+  branch=$(git branch -a | sed 's/^..//' | sed 's|remotes/origin/||' | sort -u | fzf)
+  [[ -n "$branch" ]] && git switch "$branch"
+}
+
+gcm() { git commit -m "$*"; }
+gac() { git add -A && git commit -m "$*"; }
+
+# --- Cheatsheet ---
+cheat() {
+  cat <<'EOF'
+=== PROJECT NAV ===  proj ~iac ~gs ~helm ~sr ~dots
+=== TERRAFORM ===    tf tfi tfp tfa tfv
+=== KUBERNETES ===   kgp kgs kgd kl kns klogs
+=== GIT ===          gsw gcm gac gadd gchb fshow
+=== FZF ===          fe fd fkill fh
+=== BASE64 ===       b64e b64d b64c certinfo
+=== VPN ===          vpn [incuba|status]
+=== EXTRACT ===      extract <file>
+
+Run 'cheat -v' for detailed help or SUPER+SHIFT+K for GUI
+EOF
+  [[ "$1" == "-v" ]] && ~/.local/bin/zsh-cheatsheet
+}
+
+# --- Quick Config Edits ---
+alias zshrc='${EDITOR:-nvim} ~/.zshrc && source ~/.zshrc'
+alias hyprconf='${EDITOR:-nvim} ~/.config/hypr/hyprland.conf'
+alias waybarconf='${EDITOR:-nvim} ~/.config/waybar/config'
+alias tmuxconf='${EDITOR:-nvim} ~/.config/tmux/tmux.conf'
+alias ghosttyconf='${EDITOR:-nvim} ~/.config/ghostty/config'
 
 # Starship prompt (must be last)
 eval "$(starship init zsh)"

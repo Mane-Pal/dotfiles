@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Scratchpad toggle script for Ghostty
+# Scratchpad toggle script for ghostty
 # This script toggles the visibility of the scratchpad terminal
 
 SCRATCHPAD_CLASS="scratchpad"
@@ -18,5 +18,5 @@ if hyprctl clients | grep -q "class: $SCRATCHPAD_CLASS"; then
     fi
 else
     # If scratchpad doesn't exist, launch it
-    ghostty --class $SCRATCHPAD_CLASS &
+    ghostty --class=$SCRATCHPAD_CLASS &
 fi 

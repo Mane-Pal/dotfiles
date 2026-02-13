@@ -1,0 +1,9 @@
+# OpenFortiVPN configuration for INCUBA VPN
+# Copy this to incuba.conf and fill in your credentials
+# chmod 600 incuba.conf
+
+host = sslvpn.incuba.dk
+port = 443
+username = your-username@mindway-ai.com
+# password = your-password  # Or leave blank to be prompted
+trusted-cert = a0543bab93e1b1a3b3a33a58550e724f20edbd88b955bb96ac56596fa0002bc5

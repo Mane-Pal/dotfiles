@@ -3,7 +3,7 @@
 	email = mads@mindway.ai
 
 [core]
-	excludesfile = /home/manepal/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	editor = nvim
 	pager = delta
 
@@ -31,11 +31,15 @@
 	lg = log --oneline --graph --decorate
 	undo = reset --soft HEAD~1
 	unstage = reset HEAD --
+	sw = switch
+	swc = switch -c
+	pr = pull --rebase origin
+	pom = push origin master
+	pob = "!git push origin $(git branch --show-current)"
+	recent = branch --sort=-committerdate --format='%(refname:short)'
 
 [init]
 	defaultBranch = master
 
 [push]
 	autoSetupRemote = true
-[safe]
-	directory = /home/manepal/git/mindway/StreamBeacon
