@@ -72,7 +72,7 @@ setup_workspace_bindings() {
 # Function to setup single monitor (laptop only)
 setup_single_monitor() {
   echo "Setting up single monitor (laptop only)"
-  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,0x0,1.0"
+  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1200@60,0x0,1.0"
 }
 
 # Function to setup dual monitor with external display
@@ -88,19 +88,19 @@ setup_dual_monitor() {
     # 4K external monitor
     echo "Detected 4K external monitor"
     hyprctl keyword monitor "$external_monitor,3840x2160@60,0x0,1.0"
-    hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,3840x1296,1.25"
+    hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1200@60,3840x1200,1.25"
   elif [[ "$EXT_RES" == *"2560x1440"* ]]; then
     # 1440p external monitor
     echo "Detected 1440p external monitor"
     hyprctl keyword monitor "$external_monitor,2560x1440@60,0x0,1.0"
-    hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,2560x1440,1.25"
+    hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1200@60,2560x480,1.25"
   else
     # Generic external monitor - place side by side
     echo "Detected generic external monitor: $EXT_RES"
     hyprctl keyword monitor "$external_monitor,preferred,0x0,1.0"
-    hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,auto-right,1.25"
+    hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1200@60,auto-right,1.25"
   fi
-  
+
   # Set workspace bindings - external monitor as main, laptop as secondary
   setup_workspace_bindings "$external_monitor" "$LAPTOP_DISPLAY"
 }
@@ -117,7 +117,7 @@ setup_home_office() {
   hyprctl keyword monitor "DP-3,transform,1"
   
   # Laptop display (eDP-1) - positioned at left
-  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60.03,326x1229,1.0"
+  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1200@60,326x1109,1.0"
   
   # Set workspace bindings - DP-4 as main, others locked
   setup_workspace_bindings "DP-4" "$LAPTOP_DISPLAY" "DP-3"
@@ -131,8 +131,8 @@ setup_work_office() {
   hyprctl keyword monitor "DP-5,3840x2160@60,0x0,1.0"
   
   # Laptop display (eDP-1) - positioned to the right of 4K monitor
-  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,3840x1296,1.25"
-  
+  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1200@60,3840x1200,1.25"
+
   # Set workspace bindings - DP-5 as main, laptop as secondary
   setup_workspace_bindings "DP-5" "$LAPTOP_DISPLAY"
 }
@@ -167,7 +167,7 @@ setup_multi_monitor() {
   hyprctl keyword monitor "$primary_ext,preferred,0x0,1.0"
 
   # Laptop display to the right
-  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1080@60,auto-right,1.25"
+  hyprctl keyword monitor "$LAPTOP_DISPLAY,1920x1200@60,auto-right,1.25"
 
   # Additional external monitors
   for i in $(seq 1 $((${#external_monitors[@]} - 1))); do

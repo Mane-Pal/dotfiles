@@ -63,6 +63,16 @@ install_package() {
 
     # Post-install actions for specific packages
     case "$package" in
+      "tmux")
+        local tpm_dir="$HOME/.config/tmux/plugins/tpm"
+        if [[ ! -d "$tpm_dir/.git" ]]; then
+          info "Installing TPM (Tmux Plugin Manager)..."
+          rm -rf "$tpm_dir"
+          git clone https://github.com/tmux-plugins/tpm.git "$tpm_dir"
+        fi
+        info "Installing tmux plugins..."
+        "$tpm_dir/bin/install_plugins"
+        ;;
       "scripts")
         info "Enabling systemd user services..."
         # Reload systemd user daemon to pick up new services
