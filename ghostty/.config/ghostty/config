@@ -56,6 +56,7 @@ scrollback-limit = 10000000
 
 clipboard-read = allow
 clipboard-write = allow
+confirm-close-surface = false
 
 # ============================================================================
 # KEYBINDINGS
