@@ -1,6 +1,5 @@
-[user]
-	name = Mads Nedergaard Paulsen
-	email = mads@mindway.ai
+[include]
+	path = ~/.gitconfig.local
 
 [core]
 	excludesfile = ~/.gitignore_global
@@ -43,3 +42,9 @@
 
 [push]
 	autoSetupRemote = true
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
