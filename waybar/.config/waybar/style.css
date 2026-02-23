@@ -6,12 +6,6 @@
   color: #cdd6f4;
 }
 
-window#waybar {
-  background-color: #1e1e2e;
-  border-bottom: 2px solid #89b4fa;
-  transition-property: background-color;
-  transition-duration: 0.5s;
-}
 
 /* Module spacing */
 .modules-right > widget:not(:last-child) {
@@ -112,4 +106,12 @@ window#waybar {
     background-color: #eba0ac;
     color: #1e1e2e;
   }
+}
+
+window#waybar {
+  background-color: #1e1e2e;
+  border-bottom: 2px solid #89b4fa;
+  padding-bottom: 4px;
+  transition-property: background-color;
+  transition-duration: 0.5s;
 }
